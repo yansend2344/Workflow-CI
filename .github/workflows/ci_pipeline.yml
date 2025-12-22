@@ -34,10 +34,8 @@ jobs:
 
     - name: Build and Push Docker Image
       run: |
-        LATEST_RUN=$(ls -td mlruns/0/*/ | head -1)
+        LATEST_RUN=$(ls -td mlruns/*/*/ | head -1)
         MODEL_URI="${LATEST_RUN}artifacts/model"
-        
-        echo "Model ditemukan di: $MODEL_URI"
         
         mlflow models build-docker \
           -m "$MODEL_URI" \
