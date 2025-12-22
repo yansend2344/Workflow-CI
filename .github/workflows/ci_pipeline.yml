@@ -1,0 +1,47 @@
+name: CI/CD Pipeline & Docker Build
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pandas numpy scikit-learn mlflow matplotlib seaborn
+
+    - name: Train Model
+      run: python MLProject/modelling.py
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Build and Push Docker Image
+      run: |
+        LATEST_RUN=$(ls -td mlruns/0/*/ | head -1)
+        MODEL_URI="${LATEST_RUN}artifacts/model"
+        
+        echo "Model ditemukan di: $MODEL_URI"
+        
+        mlflow models build-docker \
+          -m "$MODEL_URI" \
+          -n "yansend23/heart-disease-model:latest" \
+          --enable-mlserver
+
+        docker push "yansend23/heart-disease-model:latest"
