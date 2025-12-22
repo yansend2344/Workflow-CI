@@ -1,4 +1,4 @@
-name: Heart_Disease_Automation
+name: heart_disease_project
 
 conda_env: conda.yaml
 

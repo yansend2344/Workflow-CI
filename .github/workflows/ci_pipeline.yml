@@ -27,7 +27,7 @@ jobs:
         pip install pandas numpy scikit-learn mlflow matplotlib seaborn joblib
 
     - name: Train Model
-      run: mlflow run . --env-manager=local
+      run: mlflow run MLProject --env-manager=local
 
     - name: Get latest MLflow run_id
       run: |
