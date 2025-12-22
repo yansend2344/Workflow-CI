@@ -1,0 +1,38 @@
+artifact_path: file:///home/runner/work/Workflow-CI/Workflow-CI/mlruns/0/models/m-af15a5f060384d8a84319054b09427b7/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.9.25
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.6.1
+is_signature_from_type_hint: false
+mlflow_version: 3.1.4
+model_id: m-af15a5f060384d8a84319054b09427b7
+model_size_bytes: 3164309
+model_uuid: m-af15a5f060384d8a84319054b09427b7
+prompts: null
+run_id: 437e54e2f0ad43419b9987ba1e8ae50f
+signature:
+  inputs: '[{"type": "long", "name": "sex", "required": true}, {"type": "double",
+    "name": "trestbps", "required": true}, {"type": "double", "name": "chol", "required":
+    true}, {"type": "long", "name": "fbs", "required": true}, {"type": "long", "name":
+    "restecg", "required": true}, {"type": "double", "name": "thalch", "required":
+    true}, {"type": "long", "name": "exang", "required": true}, {"type": "double",
+    "name": "oldpeak", "required": true}, {"type": "long", "name": "dataset_Hungary",
+    "required": true}, {"type": "long", "name": "dataset_Switzerland", "required":
+    true}, {"type": "long", "name": "dataset_VA Long Beach", "required": true}, {"type":
+    "long", "name": "cp_atypical angina", "required": true}, {"type": "long", "name":
+    "cp_non-anginal", "required": true}, {"type": "long", "name": "cp_typical angina",
+    "required": true}, {"type": "long", "name": "age_group", "required": true}]'
+  outputs: '[{"type": "tensor", "tensor-spec": {"dtype": "int64", "shape": [-1]}}]'
+  params: null
+type_hint_from_example: false
+utc_time_created: '2025-12-22 12:13:11.366835'
