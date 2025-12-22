@@ -5,10 +5,13 @@ on:
     branches: [ "main" ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout Code
       uses: actions/checkout@v4
@@ -16,15 +19,28 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.12'
+        python-version: '3.9'
 
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pandas numpy scikit-learn mlflow matplotlib seaborn
+        pip install pandas numpy scikit-learn mlflow matplotlib seaborn joblib
 
     - name: Train Model
-      run: python MLProject/modelling.py
+      run: mlflow run . --env-manager=local
+
+    - name: Get latest MLflow run_id
+      run: |
+        RUN_ID=$(ls -td mlruns/0/*/ | grep -Eo '[0-9a-f]{32}' | head -n 1)
+        echo "RUN_ID=$RUN_ID" >> $GITHUB_ENV
+
+    - name: Commit & Push MLflow Artifacts
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git add mlruns/
+        git commit -m "Add MLflow artifacts for run $RUN_ID [skip ci]" || echo "No changes"
+        git push origin main
 
     - name: Login to Docker Hub
       uses: docker/login-action@v3
@@ -34,12 +50,9 @@ jobs:
 
     - name: Build and Push Docker Image
       run: |
-        LATEST_RUN=$(ls -td mlruns/*/*/ | head -1)
-        MODEL_URI="${LATEST_RUN}artifacts/model"
-        
         mlflow models build-docker \
-          -m "$MODEL_URI" \
-          -n "yansend23/heart-disease-model:latest" \
+          --model-uri "runs:/$RUN_ID/model" \
+          --name ${{ secrets.DOCKER_USERNAME }}/heart-disease-model:latest \
           --enable-mlserver
 
-        docker push "yansend23/heart-disease-model:latest"
+        docker push ${{ secrets.DOCKER_USERNAME }}/heart-disease-model:latest
