@@ -1,0 +1,14 @@
+artifact_uri: file:///home/runner/work/Workflow-CI/Workflow-CI/mlruns/0/adf350048cf845fe9d13a43f5e35ae84/artifacts
+end_time: 1766409788740
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: adf350048cf845fe9d13a43f5e35ae84
+run_name: abrasive-swan-425
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1766409780159
+status: 3
+tags: []
+user_id: runner
